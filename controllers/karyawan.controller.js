@@ -43,7 +43,7 @@ const storeKaryawan = async (req, res) => {
         const randId = Math.floor(Math.random() * 1000);
         const mimeType = req.file.mimetype;
         const base64 = req.file.buffer.toString('base64');
-        const image = `data:${mimeType};base64,${base64}`;
+        const photo = `data:${mimeType};base64,${base64}`;
 
         const adminId = req.admin.userId;
         const [admin] = await db.query('SELECT * FROM admin WHERE id = ?', [adminId]);
@@ -54,19 +54,47 @@ const storeKaryawan = async (req, res) => {
 
         const dataAdmin = admin[0];
 
-        const [result] = await db.query(
-            `INSERT INTO karyawan (nip, nama, alamat, gend, photo, tgl_lahir, id, insert_at, insert_by) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
-            nip, nama, alamat, gend, image, bornDate, randId, new Date(), dataAdmin.username
-        ]);
+        // const [result] = await db.query(
+        //     `INSERT INTO karyawan (nip, nama, alamat, gend, photo, tgl_lahir, id, insert_at, insert_by) 
+        //     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
+        //     nip, nama, alamat, gend, image, bornDate, randId, new Date(), dataAdmin.username
+        // ]);
 
-        if (result.affectedRows === 0) {
-            return res.status(500).json({ success: false, message: 'Failed to add karyawan' });
+        // if (result.affectedRows === 0) {
+        //     return res.status(500).json({ success: false, message: 'Failed to add karyawan' });
+        // }
+
+        // const [karyawan] = await db.query('SELECT * FROM karyawan WHERE nip = ?', [result.nip]);
+
+        const payload = {
+            nip,
+            nama,
+            alamat,
+            gend,
+            photo,
+            bornDate,
+            status: 1,
+            insert_by: dataAdmin.username,
+            id: randId,
         }
 
-        const [karyawan] = await db.query('SELECT * FROM karyawan WHERE nip = ?', [result.nip]);
+        //insert to store procedure 
+        const [result] = await db.query('CALL sp_add_kary_alfiansah_erik_sugiarto(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            payload.nip,
+            payload.nama,
+            payload.alamat,
+            payload.gend,
+            payload.photo,
+            payload.bornDate,
+            payload.status,
+            payload.insert_by,
+            payload.id
+        ]);
 
-        res.status(201).json({ success: true, message: 'Karyawan added successfully', data: karyawan[0] });
+
+        console.log(result);
+
+        res.status(201).json({ success: true, message: 'Karyawan added successfully' });
     } catch (error) {
         console.error('Error adding karyawan:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });

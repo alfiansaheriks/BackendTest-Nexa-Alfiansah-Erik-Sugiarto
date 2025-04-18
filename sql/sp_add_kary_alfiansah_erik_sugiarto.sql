@@ -20,7 +20,7 @@ BEGIN
       p_user_id,
       'POST /api/karyawan',
       CONCAT('NIP: ', p_nip, ', Nama: ', p_nama),
-      'FAILDE - SQL ERROR',
+      'FAILED - SQL ERROR',
       NOW()
     );
     SELECT 'error_sql' AS status;
@@ -43,9 +43,9 @@ BEGIN
   ELSE
     -- Simpan ke tabel karyawan
     INSERT INTO karyawan (
-      nip, nama, alamat, gend, photo, tgl_lahir, status, insert_at, insert_by
+      nip, nama, alamat, gend, photo, tgl_lahir, status, insert_at, insert_by, id
     ) VALUES (
-      p_nip, p_nama, p_alamat, p_gend, p_photo, p_tgl_lahir, p_status, NOW(), p_insert_by
+      p_nip, p_nama, p_alamat, p_gend, p_photo, p_tgl_lahir, p_status, NOW(), p_insert_by, p_user_id
     );
 
     -- Log sukses
@@ -54,7 +54,7 @@ BEGIN
       p_user_id,
       'POST /api/karyawan',
       CONCAT('NIP: ', p_nip, ', NAMA: ', p_nama),
-      'DATA INSERTER',
+      'DATA INSERTED',
       NOW()
     );
 
