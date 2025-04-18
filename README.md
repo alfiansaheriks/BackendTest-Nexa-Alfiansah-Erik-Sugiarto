@@ -23,7 +23,7 @@ Project ini merupakan implementasi sistem backend menggunakan **Express.js**, **
 
 ## 🚀 Cara Menjalankan Proyek
 
-### 📦 Prasyarat
+### 📦 Mandatory
 
 - Sudah menginstall [Docker](https://www.docker.com/)
 - Sudah menyiapkan file `.env` dengan isi seperti berikut:
@@ -105,5 +105,3 @@ Endpoint mencakup:
 - Semua aktivitas (berhasil/gagal) dicatat dalam `log_trx_api`
 
 ---
-
-# BackendTest-Nexa-
